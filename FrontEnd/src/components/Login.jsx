@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import {useNavigate} from 'react-router-dom';
 import { UserData } from './Context/UserContext';
+import { useEffect } from 'react';
 
 const Login = () => {
-  const {UserLogin, btnLoading} = UserData();
+  const {UserLogin, btnLoading, isAuth} = UserData();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -11,6 +12,11 @@ const Login = () => {
       e.preventDefault();
       UserLogin(email, password, navigate);
     }
+useEffect(()=>{
+  if(isAuth){
+    navigate('/');
+  }
+});
   return (
     <div className='main'>
        <div className="inputBox">

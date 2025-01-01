@@ -45,7 +45,7 @@ app.post('/signUp', async(req, res)=>{
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new UserData({ name:name, email:email, password: hashedPassword , username: name});
     await newUser.save();
-    const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '14d' });
      res.send(
       {token: token}
      );
@@ -55,13 +55,15 @@ app.post('/signUp', async(req, res)=>{
   }
       
 });
-app.get('/verify', (req, res)=>{
+app.get('/verify', async(req, res)=>{
+ 
   const {token} = req.query;
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded)=>{
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
     if(err){
       res.status(401).send("Invalid Token");
     }else{
-      res.status(200).json({email:decoded.email});
+      const Data = await UserData.findOne({email:decoded.email});
+      res.status(200).json({data : Data});
     }
   });
 });

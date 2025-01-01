@@ -1,5 +1,5 @@
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { useState } from 'react';
 import server from '../../server';
 import toast from 'react-hot-toast';
@@ -64,14 +64,16 @@ export const UserProvider = ({children})=>{
           const response = await fetch(`${server}/verify?token=${token}`);
           setIsAuth(true);
           const userData = await response.json();
+          console.log(userData);
         }catch(err){
             setIsAuth(false);
-          navigator('/login');
         }
-        }else{
-           navigator('/login');
         }
       };
+
+    useEffect(()=>{
+      verifyUser();
+    }, []);
     return (
         
         <UserContext.Provider value = {{UserLogin, btnLoading, UserRegister, verifyUser, isAuth, setIsAuth}}>{children}</UserContext.Provider>

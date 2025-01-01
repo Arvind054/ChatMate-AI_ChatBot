@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserData } from './Context/UserContext';
 const SignUp = () => {
-  const {btnLoading, UserRegister} = UserData();
+  const {btnLoading, UserRegister, isAuth} = UserData();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -11,6 +11,11 @@ const SignUp = () => {
     e.preventDefault();
     UserRegister(name, email, password, navigate);
   }
+  useEffect(()=>{
+    if(isAuth){
+      navigate('/');
+    }
+  })
   return (
     <div className='main'>
        <div className="inputBox">
