@@ -23,7 +23,7 @@ useEffect(()=>{
         <form >
            <input  className='userInputs' type="email"  placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
            <input required className='userInputs' type="text" placeholder='password'  value={password} onChange={(e)=>setPassword(e.target.value)}/>
-           <button style={{color: "green"}} onClick={(e)=>handleSubmit(e)} disabled = {btnLoading}>{btnLoading ? "Login": "..wait"}</button>
+           <button style={{color: "green"}} onClick={(e)=>handleSubmit(e)} disabled = {btnLoading}>{btnLoading ? "...wait": "Login"}</button>
            </form>
             <p>new User ?<a href="/signUp">Sign Up</a></p>
        </div>

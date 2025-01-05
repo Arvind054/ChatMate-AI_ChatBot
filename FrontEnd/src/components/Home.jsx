@@ -1,10 +1,10 @@
 import React from 'react'
 import {useNavigate} from 'react-router-dom';
-import toast from 'react-hot-toast';
-
 import { useState, useEffect } from 'react';
 import { UserData } from './Context/UserContext';
-import { use } from 'react';
+import SideBar from './SideBar';
+import Chat from './Chat';
+
 const Home = () => {
     const {verifyUser, isAuth} = UserData();
      const navigator = useNavigate();
@@ -14,7 +14,11 @@ const Home = () => {
         }
     },[]);
   return (
-    <div>Home</div>
+  
+    <div className='HomeComponent'> 
+    {isAuth && <><SideBar></SideBar><Chat></Chat></>}
+   
+    </div> 
   )
 }
 

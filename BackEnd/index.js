@@ -56,22 +56,79 @@ app.post('/signUp', async(req, res)=>{
       
 });
 app.get('/verify', async(req, res)=>{
- 
   const {token} = req.query;
   jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
     if(err){
       res.status(401).send("Invalid Token");
     }else{
-      const Data = await UserData.findOne({email:decoded.email});
-      res.status(200).json({data : Data});
+      res.status(200).send("user verified successfully");
     }
   });
 });
-app.get('/getUser', async(req, res)=>{
-  const {email} = req.query;
-  console.log(email);
-  res.status(200).send("User Found");
+//for getting all the chats of the user for sidebar 
+app.get('/chats/all', async(req, res)=>{
+  const token = req.headers.token;
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
+    if(err){
+      res.status(401).send("Invalid Token");
+    }else{
+      const data = await UserData.findOne({email:decoded.email}).populate('chats');
+      res.send({data : data});
+    }
+  });
 });
+//for Getting all meaasges of a chat.
+app.get('/chats/all/:id', async(req, res)=>{
+    const chatId = req.params.id;
+    const token = req.headers.token;
+    jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
+      if(err){
+        res.status(401).send("Error Occured");
+      }else{
+        const chats = await Chat.findOne({_id: chatId}).populate('chat');
+        res.send({data:chats});
+      }
+    });
+})
+
+//for Creating a new chat:
+app.post('/chats/new', async(req, res)=>{
+  const token = req.headers.token;
+    const newChat = new Chat({chat :[], tittle: "new Chat user" });
+    await newChat.save();
+    jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
+      if(err){
+        res.status(401).send("Error Occured");
+      }else{
+        const email = decoded.email;
+        const user = await UserData.findOne({email:email}).populate('chats');
+        user.chats.push(newChat);
+        await user.save();
+        res.send({data : user.chats});
+      }
+    });
+});
+// For Creating a new message in the current chat.
+app.get('/chats/new/:id', async(req, res)=>{
+    const chatId = req.params.id;
+    const {question, answer} = req.query;
+    const token = req.headers.token;
+    const newConversation = new Conversation({question:question, answer: answer});
+    await newConversation.save();
+    const currChat = await Chat.findOne({_id: chatId});
+    currChat.chat.push(newConversation);
+    currChat.tittle = question;
+    await currChat.save();
+    jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
+      if(err){
+        res.status(401).send("Invalid Token");
+      }else{
+        const data = await UserData.findOne({email:decoded.email}).populate('chats');
+        res.send({data : data});
+      }
+    });
+    
+})
 app.listen(process.env.PORT,(req, res)=>{
      console.log('app is running on port' , process.env.PORT);
 })

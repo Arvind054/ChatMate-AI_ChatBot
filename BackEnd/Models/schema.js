@@ -12,7 +12,10 @@ const ChatSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Conversation"
     }
-    ]
+    ],
+    tittle :{
+        type: String,
+    }
 },
 {timestamps: true}
 )

@@ -8,7 +8,6 @@ const UserContext = createContext();
 export const UserProvider = ({children})=>{
     const [btnLoading, setBtnLoading] = useState(false);
     const [isAuth, setIsAuth] = useState(false);
-    const [user, setUser] = useState([]);
     async function UserLogin(email, password, navigate){
         setBtnLoading(true);
         try{
@@ -24,11 +23,12 @@ export const UserProvider = ({children})=>{
               navigate('/');
                toast.success("Login Successfull");
                setIsAuth(true);
+               setBtnLoading(false);
           }catch(err){
               toast.error("Invalid Credintials, try again");
               navigate('/login');
+              setBtnLoading(false);
             }
-            setBtnLoading(false);
     };
     async function UserRegister(name, email, password, navigate){
         setBtnLoading(true);
@@ -49,13 +49,15 @@ export const UserProvider = ({children})=>{
             localStorage.setItem('token', token);
             setIsAuth(true);
           toast.success("SignUp Successfull");
+          setBtnLoading(false);
             navigate('/');
             
         }catch(err){
             toast.error("Invalid Credintials, try again");
-            navigate('/signUp')
+            setBtnLoading(false);
+            navigate('/signUp');
         }
-        setBtnLoading(false);
+        
     };
     async function verifyUser(){
         const token = localStorage.getItem('token');
@@ -63,14 +65,11 @@ export const UserProvider = ({children})=>{
           try{
           const response = await fetch(`${server}/verify?token=${token}`);
           setIsAuth(true);
-          const userData = await response.json();
-          console.log(userData);
         }catch(err){
             setIsAuth(false);
         }
         }
       };
-
     useEffect(()=>{
       verifyUser();
     }, []);
