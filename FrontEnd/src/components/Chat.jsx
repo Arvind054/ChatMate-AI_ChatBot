@@ -20,9 +20,11 @@ const Chat = () => {
     <div className='ChatComponent'>
       
       <div className="currentChat" ref= {chatContainerRef}>
+      {!currChat && "Click 'New Chat' to start a new Chat..."}
+
       {currentChat && currentChat.length > 0  ? (currentChat.map((e, i)=>{
        return  <SingleChat question={e.question} answer={e.answer} key={i}  />
-      })) :"Create the + icon to Start a New Chat"}
+      })) : <> <br></br>{" Use The Search Bar below To search..."}</>}
            
       </div>
       {currChat && <>

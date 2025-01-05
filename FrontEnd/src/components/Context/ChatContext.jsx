@@ -91,23 +91,38 @@ export const ChatProvider = ({children})=>{
                     }
                   });
                   setMessage(data.data.chat);
-
+                  
            }catch(err){
                 toast.error("Error fetching Messages");
            }
            setMessageLoading(false);
     }
+    async function deleteChat(chatId){
+        try{
+            const response = await axios.get(`${server}/chats/delete/${chatId}`, {
+                params:{
+                    id: chatId,
+                }
+            });
+            toast.success("chat deleted Successfully");
+            getChats();
+        }
+        catch(err){
+            toast.error("Error Deleting Chat");
+        }
+    }
     useEffect(()=>{
-       
+       if(isAuth){
         getChats();
+       }
         
-    }, []);
+    });
     useEffect(()=>{
         if(isAuth){
        getMessages();
         }
     }, [currChat])
-    return <ChatContext.Provider value = {{getResponse,messages,prompt, setPrompt, loading, chats,createNew, createNewChat, currChat, setCurrentChat}}>{children}</ChatContext.Provider>
+    return <ChatContext.Provider value = {{getResponse,messages,prompt, setPrompt, loading, chats,createNew, createNewChat, currChat, setCurrentChat,deleteChat}}>{children}</ChatContext.Provider>
 }
 
 export const ChatData =  () => useContext(ChatContext);

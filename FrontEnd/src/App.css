@@ -94,7 +94,9 @@
 .recentChatDisplay button{
   margin: 7px;
 }
-
+.deleteBtn{
+  width:  30px;
+}
 
 /*chat component*/
 .ChatComponent{

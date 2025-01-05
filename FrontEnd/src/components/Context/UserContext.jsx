@@ -59,6 +59,11 @@ export const UserProvider = ({children})=>{
         }
         
     };
+     function UserLogOut(navigte){
+          localStorage.removeItem("token");
+          setIsAuth(false);
+          navigte("/login");
+    }
     async function verifyUser(){
         const token = localStorage.getItem('token');
         if(token){
@@ -75,7 +80,7 @@ export const UserProvider = ({children})=>{
     }, []);
     return (
         
-        <UserContext.Provider value = {{UserLogin, btnLoading, UserRegister, verifyUser, isAuth, setIsAuth}}>{children}</UserContext.Provider>
+        <UserContext.Provider value = {{UserLogin, btnLoading, UserRegister, verifyUser, isAuth, setIsAuth, UserLogOut}}>{children}</UserContext.Provider>
     );
 }
 export const UserData = ()=> useContext(UserContext);

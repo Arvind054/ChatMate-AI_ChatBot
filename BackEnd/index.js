@@ -94,7 +94,7 @@ app.get('/chats/all/:id', async(req, res)=>{
 //for Creating a new chat:
 app.post('/chats/new', async(req, res)=>{
   const token = req.headers.token;
-    const newChat = new Chat({chat :[], tittle: "new Chat user" });
+    const newChat = new Chat({chat :[], tittle: "new Chat.." });
     await newChat.save();
     jwt.verify(token, process.env.JWT_SECRET_KEY, async(err, decoded)=>{
       if(err){
@@ -102,7 +102,7 @@ app.post('/chats/new', async(req, res)=>{
       }else{
         const email = decoded.email;
         const user = await UserData.findOne({email:email}).populate('chats');
-        user.chats.push(newChat);
+        user.chats.unshift(newChat);
         await user.save();
         res.send({data : user.chats});
       }
@@ -113,7 +113,7 @@ app.get('/chats/new/:id', async(req, res)=>{
     const chatId = req.params.id;
     const {question, answer} = req.query;
     const token = req.headers.token;
-    const newConversation = new Conversation({question:question, answer: answer});
+    const newConversation = new Conversation({chatId: chatId,question:question, answer: answer});
     await newConversation.save();
     const currChat = await Chat.findOne({_id: chatId});
     currChat.chat.push(newConversation);
@@ -128,6 +128,24 @@ app.get('/chats/new/:id', async(req, res)=>{
       }
     });
     
+});
+
+//For Deleting the Chat.
+app.get('/chats/delete/:id', async(req, res)=>{
+     const chatId = req.params.id;
+     try{
+     const currChat = await Chat.findOne({_id : chatId});
+     if(!currChat){
+      res.status(401).send("Chat Not Fount...");
+      return ;
+     }
+       await Conversation.deleteMany({chatId : currChat._id });
+       await Chat.deleteOne({_id: chatId});
+       res.status(200).send("Deleted Successfully");
+     }
+     catch(err){
+      res.status(401).send("Error Deleting Chat");
+     }
 })
 app.listen(process.env.PORT,(req, res)=>{
      console.log('app is running on port' , process.env.PORT);

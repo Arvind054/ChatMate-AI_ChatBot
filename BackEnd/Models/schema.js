@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const conversationSchema = new mongoose. Schema({
+    chatId: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
     question :{
         type: String
     },
