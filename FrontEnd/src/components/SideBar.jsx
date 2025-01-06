@@ -1,37 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import logo from "../assets/logo.svg";
-import MenuIcon from '@mui/icons-material/Menu';
 import {ChatData} from './Context/ChatContext'
 import DeleteIcon from '../assets/DeleteIcon.svg'
 import { UserData } from './Context/UserContext';
 import {useNavigate} from 'react-router-dom';
+import menuBar from '../assets/menuBar.svg'
+import closeIcon from '../assets/closeIcon.svg'
 const SideBar = () => {
-  const [showSidebar, toggleSidebar] = useState(false);
   const {chats,createNew, createNewChat,currChat, setCurrentChat, deleteChat} = ChatData();
   const {UserLogOut} = UserData();
+  const [showSideabar, setShowSidebar] = useState(true);
+  const [minScreen, setminScreen] = useState(false);
+  const styles = { zIndex: 1, width: '100%' };
     const navigate = useNavigate();
-  useEffect(()=>{
-   if(window.innerWidth <= 800){
-    toggleSidebar(true);
-   }else{
-    toggleSidebar(false);
-   }
-  }, []);
+  
   async function handelDelete(chatId){
      await deleteChat(chatId);
   }
-  if(showSidebar){
-       return (
-        <button onClick={()=>toggleSidebar(!showSidebar)}>
-        <MenuIcon ></MenuIcon>
+useEffect(()=>{
+ if(window.innerWidth < 800){
+   setShowSidebar(false);
+   setminScreen(true);
+ }else{
+  setShowSidebar(true);
+  setminScreen(false);
+ }
+},[]);
+  if(!showSideabar){
+    return (
+      <button className='showMenuBarBtn' onClick={()=>{setShowSidebar(true)}}> 
+        <img src={menuBar} alt="img not" />
         </button>
-       )
+        
+    )
   }else{
   return (
-    
-    <div className='SideBarComponent'>  
+    <div className='SideBarComponent' style={minScreen ? styles : undefined}>  
     <div className="appLogo">
-       <img  src={logo} alt="" /> <span>ChatMate</span>
+       <img  src={logo} alt="" /> <span>ChatMate</span> {minScreen ? <button onClick={()=>{setShowSidebar(false)}} className='closeIconbtn'><img src={closeIcon} alt="" /></button> : ""}
     </div>
        <hr />
     <div className="sideBarChat">
@@ -44,7 +50,7 @@ const SideBar = () => {
              <button  onClick={()=>setCurrentChat(e._id)}> 
              <span>{e.tittle.slice(0, 20)}...</span>
              </button>
-            <button onClick={()=>handelDelete(e._id)}> <img src={DeleteIcon} alt="" className='deleteBtn'  /></button>
+            <span className='chatDel' onClick={()=>handelDelete(e._id)}> <img src={DeleteIcon} alt="" className='deleteBtn'  /></span>
             </div>
           )
           )) :<p>No Recent Chats</p>}
@@ -54,7 +60,9 @@ const SideBar = () => {
       </div>
     </div>
           </div>
+
   )
+
 }
 }
 

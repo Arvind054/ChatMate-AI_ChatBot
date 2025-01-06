@@ -56,7 +56,7 @@
 .SideBarComponent{
   width: 25%;
   height: 100%;
-  background-color: rgb(19, 19, 19);
+  background-color: rgb(20, 14, 48);
 }
 .appLogo{
   margin-top: 20px;
@@ -76,12 +76,12 @@
 }
 .sideBarChat button{
   background-color: gray;
-  width: 90%;
+  width: 70%;
   font-size: 18px;
+  margin: 5px 10px;
+
 }
-.sideBarChat button:hover{
-  background-color: rgb(0, 0, 0);
-}
+
 .recentChatDisplay{
   padding-left: 1.5rem;
   width: 100%;
@@ -92,12 +92,31 @@
   scrollbar-width: thin;
 }
 .recentChatDisplay button{
+  flex: 1;
   margin: 7px;
+  align-self: flex-start;
 }
 .deleteBtn{
-  width:  30px;
+  width:  20px;
 }
 
+.sidebarSingleChat{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: grey;
+  margin: 5px;
+  width: 80%;
+  padding-right: 15px;
+  border-radius: 10px;
+}
+
+.chatDel :hover{
+   border: 2px solid rgb(32, 32, 80);
+   border-radius: 5px;
+   padding: 4px;
+}
 /*chat component*/
 .ChatComponent{
   width: auto;
@@ -180,4 +199,23 @@
 .customLogos{
   width: 25px;
   padding: 5px;
+}
+
+/* SideBar Hiding*/
+.showMenuBarBtn{
+  background-color: rgb(34, 34, 83);
+  align-self:self-start;
+  margin: 10px;
+}
+.showMenuBarBtn img{
+  width: 20px;
+}
+.closeIconbtn{
+  width: 20px;
+  padding: 1px 25px;
+}
+.closeIconbtn img{
+  align-self: center;
+   width: 15px;
+   margin: 0px;
 }
