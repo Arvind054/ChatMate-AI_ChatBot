@@ -1,2 +1,2 @@
-const server = 'http://localhost:3000'
+const server = 'https://chatmate-backend-0bit.onrender.com'
 export default server;
